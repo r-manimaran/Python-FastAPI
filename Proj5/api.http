@@ -1,0 +1,21 @@
+GET http://127.0.0.1:8000/employees
+
+###
+
+POST http://127.0.0.1:8000/employees
+Content-Type: application/json
+
+{
+    "name": "Manimaran11",
+    "department": "sales",
+    "salary": 8000,
+    "age":77,
+    "dateofjoin": "2024-06-01",
+    "skills":[
+        {
+            "id":3,
+            "name":".net",
+            "level":2
+        }
+    ]
+}
