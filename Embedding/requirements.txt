@@ -1,0 +1,4 @@
+Fastapi
+uvicorn
+sentence-transformers
+
