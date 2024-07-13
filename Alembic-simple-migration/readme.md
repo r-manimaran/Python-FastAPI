@@ -59,6 +59,14 @@ You can obtain the SQL of a single or multiple specific revisions by specifying 
 
 ```bash
 > alembic upgrade <previous>:<current> --sql
+
+#exmple 1: 
+> alembic upgrade af768b726566 --sql
+
+#example 2: revert from base
+# this is rare helpful to see what the revert the initial revision
+> alembic downgrade af768b726566:-1 --sql
+
 ```
 
 The same work with downgrade command also.
@@ -69,3 +77,6 @@ The same work with downgrade command also.
 
 No change in the history, just generated SQL above
 ![alt text](image-3.png)
+
+
+![alt text](image-4.png)
