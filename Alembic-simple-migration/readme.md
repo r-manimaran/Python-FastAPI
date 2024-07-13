@@ -2,7 +2,10 @@
 ### Create the Alembic environment
 ```bash
 # initialize the Alembic Migration
-> alembic init name
+> alembic init <name>
+#example here
+> alembic init empapp
+
 # create the initial revision wwith a meaningfull migration message
 > alembic revision -m "Initial_create_emp_table"
 
@@ -49,3 +52,20 @@ sqlalchemy.echo = True
 
 ### Added Departments table and Reference
 ![alt text](image-1.png)
+
+
+### To Get the SQL query of a revision
+You can obtain the SQL of a single or multiple specific revisions by specifying start:end in the command line
+
+```bash
+> alembic upgrade <previous>:<current> --sql
+```
+
+The same work with downgrade command also.
+```bash
+> alembic downgrade <current>:<previous> --sql
+```
+![alt text](image-2.png)
+
+No change in the history, just generated SQL above
+![alt text](image-3.png)
