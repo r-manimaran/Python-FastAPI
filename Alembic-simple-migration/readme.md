@@ -43,3 +43,9 @@ To view the DB script that is generating by Alembic during the migration, set th
 #generate the SQL
 sqlalchemy.echo = True
 ```
+
+### Created Initial Migration DB view
+![alt text](image.png)
+
+### Added Departments table and Reference
+![alt text](image-1.png)
