@@ -3,3 +3,4 @@ uvicorn
 python_dotenv
 sqlalchemy
 psycopg2
+alembic
