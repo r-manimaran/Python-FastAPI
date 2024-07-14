@@ -4,10 +4,22 @@ import uvicorn
 from routers import todos,auth
 import models
 from database import engine
+# Added for Logging
+import logging
+from logging_config import setup_logging
+
+#Setup the logging
+setup_logging()
 
 app = FastAPI()
 
 models.Base.metadata.create_all(bind=engine)
+
+# Test Endpoint 
+@app.get("/")
+def read_root():
+    logging.info("Root Endpoint called")
+    return {"Hello": "World"}
 
 #mount the routes
 app.include_router(auth.router)

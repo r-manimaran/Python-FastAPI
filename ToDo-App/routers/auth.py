@@ -7,6 +7,12 @@ import models
 from database import engine, SessionLocal
 from sqlalchemy.orm import Session
 
+# Added for Logging
+import logging
+from logging_config import setup_logging
+
+#Setup the logging
+setup_logging()
 
 SECRET_KEY = "1a2b3cd5e6f7g8h9i0j0k9l8m7n6o5p4q4rs2t1u2v5w34y8z"
 ALGORITHM = "HS256"
@@ -63,14 +69,18 @@ async def register_new_user(request: User, db: Session = Depends(get_db)):
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
+    logging.info("User created successfully")
     return new_user
 
 #login the user
 @router.post("/login")
 async def login_user(request: UserLogin, db: Session = Depends(get_db)):
     user = db.query(models.Users).filter(models.Users.username == request.username).first()
+    logging.info(f"User found: {user}")
     if not user:
+        logging.error("User not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
     if not bcrypt_context.verify(request.password, user.hashed_password):
+        logging.error("Incorrect password")
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect password")
     return user
