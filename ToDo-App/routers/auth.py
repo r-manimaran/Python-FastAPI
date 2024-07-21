@@ -10,6 +10,8 @@ from sqlalchemy.orm import Session
 # Added for Logging
 import logging
 from logging_config import setup_logging
+from datetime import timedelta, datetime
+from jose import jwt,JWTError
 
 #Setup the logging
 setup_logging()
@@ -42,6 +44,24 @@ models.Base.metadata.create_all(bind=engine)
 
 def get_password_hash(password):
     return bcrypt_context.hash(password)
+
+def authenticate_user(db: Session, username: str, password: str):
+    user = db.query(models.Users).filter(models.Users.username == username).first()
+    if not user:
+        return False
+    if not bcrypt_context.verify(password, user.hashed_password):
+        return False
+    return user
+
+def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
+    to_encode = data.copy()
+    if expires_delta:
+        expire = datetime.now(datetime.UTC) + expires_delta
+    else:
+        expire = datetime.now(datetime.UTC) + timedelta(minutes=15)
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
 
 class User(BaseModel):
     username: str
@@ -84,3 +104,20 @@ async def login_user(request: UserLogin, db: Session = Depends(get_db)):
         logging.error("Incorrect password")
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect password")
     return user
+
+#Get Token
+@router.post("/token")
+async def login_for_access_token(form_data: UserLogin, db: Session = Depends(get_db)):
+    user = authenticate_user(db, form_data.username, form_data.password)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(
+        data={"sub": user.username,"id":user.id}, expires_delta=access_token_expires
+    )
+    
+    return {"access_token": access_token, "token_type": "bearer"}
