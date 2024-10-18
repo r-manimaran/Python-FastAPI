@@ -11,3 +11,5 @@
   > zip aws_lambda_artifact.zip -u main.py
 
 ```
+
+![alt text](image.png)
