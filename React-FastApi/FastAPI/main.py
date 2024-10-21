@@ -72,24 +72,39 @@ def create_user(user: UserInput, db: db_dependency):
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
-    return db_user
+    returnUser = {
+                  "status":status.HTTP_201_CREATED, 
+                  "user":db_user.username,
+                  "email":db_user.email
+                  }
+    return returnUser
 
 @app.get("/users/", status_code=status.HTTP_200_OK)
 def read_users(db: db_dependency):
     users = db.query(models.User).all()
-    return users
+    return decodeUsers(users)
 
 @app.get("/users/{user_id}", status_code=status.HTTP_200_OK)
 def read_user(user_id: int, db: db_dependency):
     db_user = db.query(models.User).filter(models.User.id == user_id).first()
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
-    return db_user
+    return decodeUser(db_user)
 
 @app.post("/users/{user_id}/transactions/", status_code=status.HTTP_201_CREATED)
 def create_transaction(user_id: int, transaction: TransactionBase, db: db_dependency):
-    db_transaction = models.Transaction(**transaction.dict(), owner_id=user_id)
+    db_transaction = models.Transaction(**transaction.dict(), user_id=user_id)
     db.add(db_transaction)
     db.commit()
     db.refresh(db_transaction)
     return db_transaction
+
+
+def decodeUser(user:UserBase)->dict:
+    return {
+        "id":user.id,
+        "username":user.username,
+        "email":user.email       
+    }
+def decodeUsers(users:UserBase)->list:
+   return [decodeUser(user) for user in users]
