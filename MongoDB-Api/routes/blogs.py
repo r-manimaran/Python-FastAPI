@@ -30,6 +30,19 @@ async def get_blog(id: int):
 async def get_blogs():
     #get all the blogs from the database
     blogs = blog_collection.find()
+    #decode the blogs
+    blogs = decodeBlogs(blogs)
     #return the blogs
     return blogs
-   
+
+def decodeBlog(doc) -> dict:
+    return {
+        "_id":str(doc["_id"]),
+        "title":doc["title"],
+        "body":doc["body"],
+        "author":doc["author"]     
+      
+    }
+
+def decodeBlogs(docs) -> list:
+    return [decodeBlog(doc) for doc in docs]
