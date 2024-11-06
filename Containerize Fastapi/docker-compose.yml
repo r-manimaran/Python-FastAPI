@@ -1,0 +1,9 @@
+name: myapp
+services:
+  api:
+    build:
+      context: ./
+      dockerfile: dockerfile
+    image: myapp-api
+    ports:
+      - "8000:8000"
