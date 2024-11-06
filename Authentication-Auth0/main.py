@@ -2,6 +2,9 @@ from fastapi import FastAPI, Depends, status
 
 app = FastAPI()
 
+@app.post("/api/login")
+def login():
+    return {"message":"Logged in"}
 
 @app.get("/api/public")
 def public():
