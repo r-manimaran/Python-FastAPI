@@ -2,16 +2,16 @@ version: '3.9'
 
 services:
   api:
-    build: 
+    build: .
     ports:
-      - "7755: 7755"
+      - "7755:7755"
   
   prometheus:
     image: prom/prometheus
     volumes:
-      - ./prometheus.yml : /etc/prometheus/prometheus.yml
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
-      - "9090: 9090"
+      - "9090:9090"
   
   grafana:
     image: grafana/grafana
@@ -21,11 +21,14 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - grafana-data: /varr/lib/grafana
+      - grafana-data:/var/lib/grafana
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana/provisioning/databoards:/etc/grafana/provisioning/dashboards
+      - ./dashboards:/var/lib/grafana/dashboards
     depends_on:
       - prometheus
 volumes:
-  - grafana-data:
+  grafana-data:
 
 
      
