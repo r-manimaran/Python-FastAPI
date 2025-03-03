@@ -26,3 +26,7 @@ def get_item(item_id: int):
         if item.id == item_id:
             return item
     raise HTTPException(status_code=404, detail="Item not found")
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
