@@ -1,0 +1,40 @@
+services:
+  fastapi-app:
+    image: rmanimaran/fastapi-monitoring:v3 
+    container_name: fastapi-app
+    ports:
+      - "7755:7755"
+    networks:
+      - monitoring
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command: 
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - "9090:9090"
+    networks:
+      - monitoring
+  
+  grafana:
+    image: grafana/grafana
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana/datasources/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
+      - ./grafana/dashboards/dashboard.yml:/etc/grafana/provisioning/dashboards/dashboard.yml
+      - ./grafana/dashboards/grafana-dashboard.json:/etc/grafana/provisioning/dashboards/grafana-dashboard.json
+    depends_on:
+      - prometheus
+    networks:
+      - monitoring
+networks:
+  monitoring:
+
+volumes:
+  grafana-data:
