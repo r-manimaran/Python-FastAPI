@@ -3,3 +3,11 @@ uvicorn
 redis
 requests
 openai
+python-dotenv
+langchain
+langchain-community
+langchain-openai
+tiktoken
+postgres
+psycopg2-binary
+pgvector

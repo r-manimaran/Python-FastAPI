@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+alembic
+psycopg2
+pytest
+requests
+python-dotenv
+pydantic
+pydantic-settings
