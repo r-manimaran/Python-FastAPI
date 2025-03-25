@@ -2,6 +2,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getTodos, deleteTodo, updateStatus } from "@/lib/api";
 import { Todo } from "@/types/types";
 import CreateTodoForm from "@/components/createTodoForm";
+import ConfirmCompleteDialog from "@/components/ConfirmCompleteDialog";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export default function TodosPage() {
 
@@ -27,14 +29,25 @@ export default function TodosPage() {
       queryClient.invalidateQueries({ queryKey: ["todos"] }); // Refresh the todo list
     },
   });
+
+  // handle Complete with Basic Alert
+  const handleComplete = (id: number)=>{
+    const confirm= window.confirm("Are you sure you want to mark the task as Complete?");
+    if (confirm) {
+      completeMutation.mutate(id);
+    }
+  }
   
 
     if (isLoading) return <div>Loading...</div>;
     if (error) return <div>Error: {error.message}</div>;
 
     return (
-        <div className="max-w-2xl mx-auto p-6">
-          <h1 className="text-2xl font-bold text-center mb-4">Todo List</h1>
+      <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors">
+           <header className="flex justify-between items-center p-4 bg-white dark:bg-gray-800 shadow">
+        <h1 className="text-2xl font-bold">Todo List</h1>
+        <ThemeToggle />
+      </header>
 
             <CreateTodoForm />
 
@@ -71,17 +84,22 @@ export default function TodosPage() {
               </span>
             </div>
             <div className="space-x-2">
-              {
+              {!todo.complete && (
+                <ConfirmCompleteDialog
+                  onConfirm={() => completeMutation.mutate(todo.id)}
+                />
+              )}
+              {/* {
                 !todo.complete && (
                   <button 
-                  onClick={()=> completeMutation.mutate(todo.id)}
+                  onClick={()=> handleComplete(todo.id)}
                   className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
                   disabled={completeMutation.isPending}
                   >
                     {completeMutation.isPending ? "Completing..." : "Complete"}
                   </button>
                 )
-              }
+              } */}
             
 
             <button

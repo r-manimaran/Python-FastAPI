@@ -43,3 +43,17 @@ npm install react-hook-form @hookform/resolvers zod
 
 
 ![alt text](image.png)
+
+![alt text](image-1.png)
+
+Stylish popup confirmation
+- install the below.
+npx shadcn@latest add alert-dialog
+
+
+![alt text](image-2.png)
+
+Adding Theme:
+npm install next-themes
+
+
