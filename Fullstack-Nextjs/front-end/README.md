@@ -56,4 +56,5 @@ npx shadcn@latest add alert-dialog
 Adding Theme:
 npm install next-themes
 
+npm install tailwindcss @tailwindcss/vite
 
