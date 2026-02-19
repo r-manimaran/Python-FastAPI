@@ -40,6 +40,9 @@ def get_item(item_id: int):
             return item
     raise HTTPException(status_code=404, detail="Item not found")
 
+@app.get("/hello")
+def hello():
+    return {"message": "Hello World"}
 
 ## Add the Custom metrics in the middleware
 @app.middleware("http")
